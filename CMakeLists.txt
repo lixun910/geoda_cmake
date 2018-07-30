@@ -79,6 +79,8 @@ file(GLOB_RECURSE FOUND_HEADERS "${SOURCE_DIR}/*.h")
 #list(REMOVE_ITEM FOUND_HEADERS "${SOURCE_DIR}")
 EXCLUDE_FILES_FROM_DIR_IN_LIST("${FOUND_SOURCES}" "/CommonDistFiles/" FALSE)
 EXCLUDE_FILES_FROM_DIR_IN_LIST("${FOUND_SOURCES}" "/BuildTools/" FALSE)
+EXCLUDE_FILES_FROM_DIR_IN_LIST("${FOUND_SOURCES}" "/Generic/" FALSE)
+EXCLUDE_FILES_FROM_DIR_IN_LIST("${FOUND_SOURCES}" "/swig/" FALSE)
 
 
 add_executable(${PROJECT_NAME} ${FOUND_SOURCES} ${FOUND_HEADERS})
@@ -190,13 +192,13 @@ if (CLAPACK_FOUND)
     target_link_libraries(geoda ${CLAPACK_LIBRARIES})
 endif()
 
-### request Eigen3 source code if not available
+### Eigen3 
 find_package (Eigen3)
 if (Eigen3_FOUND)
     message(STATUS "Install Eigen3 libraries: ${EIGEN3_INCLUDE_DIRS}")
     target_link_libraries (geoda Eigen3::Eigen)
 else()
-     # Eigen 3
+     # request Eigen 3 source code
     ExternalProject_Add(Eigen3
             URL "http://bitbucket.org/eigen/eigen/get/3.3.5.tar.gz"
             UPDATE_COMMAND ""
@@ -208,6 +210,21 @@ else()
     ExternalProject_Get_Property(Eigen3 source_dir)
     include_directories(${source_dir})
 endif()
+
+### OpenCL
+find_package( OpenCL REQUIRED )
+include_directories( ${OpenCL_INCLUDE_DIRS} )
+target_link_libraries(geoda ${OpenCL_LIBRARY})
+message(STATUS "FIND openCL: ${OpenCL_LIBRARY}")
+
+### libcurl
+find_path(CURL_INCLUDE_DIR NAMES curl/curl.h
+	PATHS  ${GEODA_DEP_LIBRARY_PATH})
+set(CURL_LIBRARY "-lcurl") 
+find_package(CURL REQUIRED) 
+include_directories(${CURL_INCLUDE_DIR})
+target_link_libraries(geoda ${CURL_LIBRARIES})
+message(STATUS "FIND libcurl: ${CURL_INCLUDE_DIRS}")
 
 # compile anything in deps
 add_subdirectory(${DEPS_DIR})
