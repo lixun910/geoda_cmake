@@ -1,5 +1,5 @@
-# geoda_cmake
-GeoDa &amp; GeoDa library project
+# GeoDa &amp; GeoDa library project
+
 
 
 This project is to re-org current GeoDa project for a long term solution of:
