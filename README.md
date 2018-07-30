@@ -8,4 +8,4 @@ This project is to re-org current GeoDa project for a long term solution of:
 
 2. GeoDa library (INTERFACE) build system 
 
-3. Auto-test system
+3. Auto-test system for non-UI features
