@@ -1,0 +1,5 @@
+bld/
+
+*.swp
+
+.idea/
